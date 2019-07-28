@@ -103,5 +103,6 @@ int _printf(const char *format, ...)
 
 	count = _print_selector(str, ap);
 	free(str);
+	va_end(ap);
 	return (count);
 }
