@@ -99,6 +99,7 @@ int _print_selector(char *str, va_list list)
 		}
 		k++;
 	}
+	va_end(list);
 	return (count);
 }
 
