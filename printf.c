@@ -10,7 +10,8 @@
  */
 int _write_char(char c)
 {
-	return (write(1, &c, 1));
+	write(1, &c, 1);
+	return (1);
 }
 
 
@@ -75,38 +76,26 @@ int _print_selector(char *str, va_list list)
 {
 	int count = 0, k = 0;
 
-	while (str[k] != 0)
+	for ( ; str[k] != 0; k++)
 	{
 		if (str[k] == '\\')
-		{
 			count += _special_chars(str + k);
-			k++;
-		}
 		else if (str[k] == '%' && str[k + 1] == 's')
-		{
 			count += _print_str(va_arg(list, char *));
-			k++;
-		}
 		else if (str[k] == '%' && str[k + 1] == 'c')
-		{
-			count++;
-			_write_char(va_arg(list, int));
-			k++;
-		}
+			count += _write_char(va_arg(list, int));
 		else if (str[k] == '%' && (str[k + 1] == 'd' || str[k + 1] == 'i'))
-		{
 			count += _print_number(va_arg(list, int), 0);
-			k++;
-		}
+		else if (str[k] == '%' && str[k + 1] == 'b')
+			count += _print_binary(va_arg(list, unsigned int), 0);
 		else if (str[k] == '%' && (str[k + 1] == '%' || str[k + 1] == '\0'))
-		{
 			count += _print_percentage(str + k);
-			k++;
-		}
+		else if (str[k] == '%' && str[k + 1] == 'o')
+			count += _print_octal(va_arg(list, unsigned int), 0);
 		else
 		{
-			_write_char(str[k]);
-			count++;
+			count += _write_char(str[k]);
+			k--;
 		}
 		k++;
 	}
