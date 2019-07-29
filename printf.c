@@ -72,7 +72,7 @@ int _special_chars(char *str)
  * @list: argument list
  * Return: number of chars printed
  */
-int _print_selector(char *str, va_list list)
+int _print_selector(char *str, va_list list, char *buffer)
 {
 	int count = 0, k = 0;
 
@@ -111,7 +111,7 @@ int _print_selector(char *str, va_list list)
 int _printf(const char *format, ...)
 {
 	int i = 0, k = 0, count = 0;
-	char *str;
+	char *str, *buffer;
 	va_list ap;
 
 	if (!format)
@@ -129,7 +129,9 @@ int _printf(const char *format, ...)
 		str[k] = format[k];
 	str[k] = '\0';
 
-	count = _print_selector(str, ap);
+	buffer = malloc(1024);
+
+	count = _print_selector(str, ap, buffer);
 	free(str);
 	va_end(ap);
 	return (count);
