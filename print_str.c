@@ -8,15 +8,12 @@
  * Return: 1 (Count) or error -1
  */
 
-int _print_percentage(char *str)
+int _print_percentage(char *str, char *buffer)
 {
 	int k = 1;
 
 	if (str[k] == '%')
-		_write_char('%');
-	else if (str[k] == '\0')
-		exit(-1);
-
+		_write_char('%', buffer);
 	return (1);
 }
 
@@ -27,14 +24,30 @@ int _print_percentage(char *str)
  * Return: Count
  */
 
-int _print_str(char *str)
+int _print_str(char *str, char *buffer)
 {
 	int count = 0;
 
+	char *b = "(null)";
+
 	if (!str)
-		count = _print_string("(null)");
+		count = _string_to_buff(b, buffer);
 	else
-		count = _print_string(str);
+		count = _string_to_buff(str, buffer);
 
 	return (count);
 }
+
+int _string_to_buff(char *str, char *buffer)
+{
+	int count = 0;
+
+	while (str[count])
+	{
+		buffer[count] = str[count];
+		count++;
+	}
+	return (count);
+}
+
+

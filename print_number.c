@@ -6,14 +6,14 @@
  *
  * Return: Counter for number of characters in the integer
  */
-int _print_number(int n, int count)
+int _print_number(int n, int count, char *buffer)
 {
 	unsigned int k;
 
 	if (n < 0)
 	{
 		k = -n;
-		_write_char(45);
+		_write_char(45, buffer);
 		count++;
 	}
 	else
@@ -22,9 +22,9 @@ int _print_number(int n, int count)
 	}
 	if (k / 10)
 	{
-		count = _print_number(k / 10, count);
+		count = _print_number(k / 10, count, buffer);
 	}
-	_write_char(k % 10 + '0');
+	_write_char(k % 10 + '0', buffer + count);
 
 	return (1 + count);
 }
