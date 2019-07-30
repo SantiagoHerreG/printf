@@ -9,9 +9,15 @@
  * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: write function
  */
-int _write_char(char c, char *buffer)
+int _write_char(char c, char *buffer, int count)
 {
-	buffer[0] = c;
+	if (count == 1024)
+	{
+	_print_string(buffer, 1024);
+	count = 0;
+	return (count);
+	}
+	buffer[count] = c;
 	return (1);
 }
 /**
@@ -30,32 +36,32 @@ void _print_string(char *buffer, int count)
  * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: 1 (char printed
  */
-int _special_chars(char *str, char *buffer)
+int _special_chars(char *str, char *buffer, int count)
 {
-	int k = 1, i = 0;
+	int k = 1;
 
 	if (str[k] == 'n')
-		buffer[i] = '\n';
+		buffer[count] = '\n';
 	else if (str[k] == '"')
-		buffer[i] = '"';
+		buffer[count] = '"';
 	else if (str[k] == '\'')
-		buffer[i] = '\'';
+		buffer[count] = '\'';
 	else if (str[k] == '%')
-		buffer[i] = '%';
+		buffer[count] = '%';
 	else if (str[k] == 'a')
-		buffer[i] = '\a';
+		buffer[count] = '\a';
 	else if (str[k] == 'b')
-		buffer[i] = '\b';
+		buffer[count] = '\b';
 	else if (str[k] == 'f')
-		buffer[i] = '\f';
+		buffer[count] = '\f';
 	else if (str[k] == 'r')
-		buffer[i] = '\r';
+		buffer[count] = '\r';
 	else if (str[k] == 't')
-		buffer[i] = '\t';
+		buffer[count] = '\t';
 	else if (str[k] == 'v')
-		buffer[i] = '\v';
+		buffer[count] = '\v';
 	else if (str[k] == '\\')
-		buffer[i] = '\\';
+		buffer[count] = '\\';
 
 	return (1);
 }
@@ -68,16 +74,16 @@ int _special_chars(char *str, char *buffer)
  */
 int _print_selector(char *str, va_list list, char *buffer)
 {
-	int count = 0, k = 0, a = 0;
+	int count = 0, k = 0, a = 0, z = 1;
 
 	for ( ; str[k] != 0; k++)
 	{
 		if (str[k] == '\\')
-			count += _special_chars(str + k, buffer + count);
+			count += _special_chars(str + k, buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 's')
-			count += _print_str(va_arg(list, char *), buffer + count);
+			count = _print_str(va_arg(list, char *), buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 'c')
-			count += _write_char(va_arg(list, int), buffer + count);
+			count += _write_char(va_arg(list, int), buffer, count);
 		else if (str[k] == '%' && (str[k + 1] == 'd' || str[k + 1] == 'i'))
 			count += _print_number(va_arg(list, int), 0, buffer + count);
 		else if (str[k] == '%' && str[k + 1] == 'b')
@@ -102,7 +108,6 @@ int _print_selector(char *str, va_list list, char *buffer)
 		}
 		k++;
 	}
-	buffer[count] = str[k];
 	_print_string(buffer, count);
 	if (a == -1)
 		return (a);

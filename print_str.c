@@ -23,16 +23,14 @@ int _print_percentage(char *str, char *buffer)
  * Return: Count
  */
 
-int _print_str(char *str, char *buffer)
+int _print_str(char *str, char *buffer, int count)
 {
-	int count = 0;
-
 	char *b = "(null)";
 
 	if (!str)
-		count = _string_to_buff(b, buffer);
+		count = _string_to_buff(b, buffer, count);
 	else
-		count = _string_to_buff(str, buffer);
+		count = _string_to_buff(str, buffer, count);
 
 	return (count);
 }
@@ -43,14 +41,17 @@ int _print_str(char *str, char *buffer)
  * @buffer: string allocated in the heap where chars are kept until printing
  * Return: count of chars to be printed
  */
-int _string_to_buff(char *str, char *buffer)
+int _string_to_buff(char *str, char *buffer, int count)
 {
-	int count = 0;
+	int k = 0, a = 1;
 
-	while (str[count])
+	while (str[k])
 	{
-		buffer[count] = str[count];
+		a = _write_char(str[k], buffer, count);
+		if (a == 0)
+			count = 0;
 		count++;
+		k++;
 	}
 	return (count);
 }
