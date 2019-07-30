@@ -27,6 +27,6 @@ int _print_binary(unsigned int n, int count, char *buffer)
 	if (n / 2)
 		count = _print_binary(n / 2, count, buffer);
 	_write_char(n % 2 + '0', buffer + count);
-  
+
 	return (1 + count);
 }
