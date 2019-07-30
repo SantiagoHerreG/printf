@@ -3,6 +3,7 @@
  * _print_octal - prints a number converted into octal
  * @n: unsigned integer
  * @count: chars printed
+ * @buffer: string allocated in the heap where chars are kept until printing
  * Return: Counter for number of chars printed
  */
 
@@ -18,6 +19,7 @@ int _print_octal(unsigned int n, int count, char *buffer)
  * _print_binary - prints a number converted into binary
  * @n: unsigned integer
  * @count: chars printed
+ * @buffer: string allocated in the heap where chars are kept until printing
  * Return: Counter for number of chars printed
  */
 int _print_binary(unsigned int n, int count, char *buffer)

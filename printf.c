@@ -6,6 +6,7 @@
 /**
  * _write_char - function that prints a char
  * @c: character to be printed
+ * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: write function
  */
 int _write_char(char c, char *buffer)
@@ -13,12 +14,11 @@ int _write_char(char c, char *buffer)
 	buffer[0] = c;
 	return (1);
 }
-
-
 /**
  * _print_string - function that prints a string using callback
- * @s: string to be printed
- * Return: numbers of characters printed
+ * @count: number of chars to be printed
+ * @buffer: string allocated in the heap, where chars are kept until printing
+ * Return: void
  */
 void _print_string(char *buffer, int count)
 {
@@ -27,6 +27,7 @@ void _print_string(char *buffer, int count)
 /**
  * _special_chars - checks and prints special and naturals characters
  * @str: pointer to the string in the next char to be printed
+ * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: 1 (char printed
  */
 int _special_chars(char *str, char *buffer)
@@ -62,6 +63,7 @@ int _special_chars(char *str, char *buffer)
  * _print_selector - function that selects format
  * @str: string to be printed
  * @list: argument list
+ * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: number of chars printed
  */
 int _print_selector(char *str, va_list list, char *buffer)
@@ -84,6 +86,8 @@ int _print_selector(char *str, va_list list, char *buffer)
 			count += _print_percentage(str + k, buffer + count);
 		else if (str[k] == '%' && str[k + 1] == 'o')
 			count += _print_octal(va_arg(list, unsigned int), 0, buffer + count);
+		else if (str[k] == '%' && (str[k + 1] == 'x' || str[k + 1] == 'X'))
+			count += _print_hex(str[k + 1], va_arg(list, unsigned int), buffer + count);
 		else
 		{
 			count += _write_char(str[k], buffer + count);
@@ -103,7 +107,7 @@ int _print_selector(char *str, va_list list, char *buffer)
  */
 int _printf(const char *format, ...)
 {
-	int i = 0, k = 0, count = 0;
+	int i = 0, k = 0, count = 0, a = 0;
 	char *str, *buffer;
 	va_list ap;
 
@@ -119,7 +123,15 @@ int _printf(const char *format, ...)
 	str = malloc(i * sizeof(char));
 
 	for (k = 0; format[k] != 0; k++)
-		str[k] = format[k];
+	{
+		if (format[k] == '%' && format[k + 1] == '\0')
+		{
+			a = -1;
+			break;
+		}
+		else
+			str[k] = format[k];
+	}
 	str[k] = '\0';
 
 	buffer = malloc(1024);
@@ -129,5 +141,7 @@ int _printf(const char *format, ...)
 	_print_string(buffer, count);
 	free(buffer);
 	va_end(ap);
+	if (a == -1)
+		return (a);
 	return (count);
 }

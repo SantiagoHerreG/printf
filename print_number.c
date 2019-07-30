@@ -3,7 +3,7 @@
  * _print_number - prints an integer as if it were a string
  * @n: integer to print
  * @count: Counter for number of characters in the integer
- *
+ * @buffer: buffer allocated in the heap
  * Return: Counter for number of characters in the integer
  */
 int _print_number(int n, int count, char *buffer)
