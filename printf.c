@@ -68,7 +68,7 @@ int _special_chars(char *str, char *buffer)
  */
 int _print_selector(char *str, va_list list, char *buffer)
 {
-	int count = 0, k = 0;
+	int count = 0, k = 0, a = 0;
 
 	for ( ; str[k] != 0; k++)
 	{
@@ -88,6 +88,13 @@ int _print_selector(char *str, va_list list, char *buffer)
 			count += _print_octal(va_arg(list, unsigned int), 0, buffer + count);
 		else if (str[k] == '%' && (str[k + 1] == 'x' || str[k + 1] == 'X'))
 			count += _print_hex(str[k + 1], va_arg(list, unsigned int), buffer + count);
+		else if (str[k] == '%' && str[k + 1] == '\0')
+		{
+			a = -1;
+			break;
+		}
+		else if (str[k] == '%' && str[k + 1] == 'u')
+			count += _print_unsigned_int(va_arg(list, unsigned int), count, buffer);
 		else
 		{
 			count += _write_char(str[k], buffer + count);
@@ -95,8 +102,10 @@ int _print_selector(char *str, va_list list, char *buffer)
 		}
 		k++;
 	}
-	buffer[count] = str[k];
-	va_end(list);
+	buffer[count] = '\0';
+	_print_string(buffer, count);
+	if (a == -1)
+		return (a);
 	return (count);
 }
 
@@ -107,7 +116,7 @@ int _print_selector(char *str, va_list list, char *buffer)
  */
 int _printf(const char *format, ...)
 {
-	int i = 0, k = 0, count = 0, a = 0;
+	int i = 0, k = 0, count = 0;
 	char *str, *buffer;
 	va_list ap;
 
@@ -120,28 +129,19 @@ int _printf(const char *format, ...)
 		;
 	i++;
 
-	str = malloc(i * sizeof(char));
+	str = malloc(i);
 
 	for (k = 0; format[k] != 0; k++)
-	{
-		if (format[k] == '%' && format[k + 1] == '\0')
-		{
-			a = -1;
-			break;
-		}
-		else
-			str[k] = format[k];
-	}
+		str[k] = format[k];
 	str[k] = '\0';
 
 	buffer = malloc(1024);
 
 	count = _print_selector(str, ap, buffer);
 	free(str);
-	_print_string(buffer, count);
+
 	free(buffer);
 	va_end(ap);
-	if (a == -1)
-		return (a);
+
 	return (count);
 }
