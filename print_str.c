@@ -1,5 +1,4 @@
 #include "holberton.h"
-#include <stdlib.h>
 
 /**
  * _print_percentage - Print percentage if format specifier is %
