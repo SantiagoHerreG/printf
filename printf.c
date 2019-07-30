@@ -102,7 +102,7 @@ int _print_selector(char *str, va_list list, char *buffer)
 		}
 		k++;
 	}
-	buffer[count] = '\0';
+	buffer[count] = str[k];
 	_print_string(buffer, count);
 	if (a == -1)
 		return (a);
@@ -130,6 +130,8 @@ int _printf(const char *format, ...)
 	i++;
 
 	str = malloc(i);
+	if (str == 0)
+		return (-1);
 
 	for (k = 0; format[k] != 0; k++)
 		str[k] = format[k];
@@ -137,9 +139,11 @@ int _printf(const char *format, ...)
 
 	buffer = malloc(1024);
 
+	if (buffer == 0)
+		return (-1);
+
 	count = _print_selector(str, ap, buffer);
 	free(str);
-
 	free(buffer);
 	va_end(ap);
 
