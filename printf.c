@@ -95,6 +95,8 @@ int _print_selector(char *str, va_list list, char *buffer)
 		}
 		else if (str[k] == '%' && str[k + 1] == 'u')
 			count += _print_unsigned_int(va_arg(list, unsigned int), count, buffer);
+		else if (str[k] == '%' && str[k + 1] == 'r')
+			count += _print_rev(va_arg(list, char *), buffer + count);
 		else
 		{
 			count += _write_char(str[k], buffer + count);
@@ -102,13 +104,11 @@ int _print_selector(char *str, va_list list, char *buffer)
 		}
 		k++;
 	}
-	buffer[count] = str[k];
 	_print_string(buffer, count);
 	if (a == -1)
 		return (a);
 	return (count);
 }
-
 /**
  * _printf - main function that replicates the original printf
  * @format: string to be printed containing format directives

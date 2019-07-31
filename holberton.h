@@ -16,5 +16,6 @@ int _print_octal(unsigned int n, int count, char *buffer);
 int _string_to_buff(char *str, char *buffer);
 int _print_hex(char, unsigned int, char *);
 int _print_unsigned_int(unsigned int n, int count, char *buffer);
+int _print_rev(char *str, char *buffer);
 
 #endif /* HOLBERTON H */
