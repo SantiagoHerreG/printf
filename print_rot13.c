@@ -3,22 +3,24 @@
 /**
  * _print_rot13 - encodes a string into rot13
  * @str: string to be printed into rot13
+ * @p: pointer to how many times the buffer has been printed
+ * @count: actual position in buffer
  * @buffer: string where chars are stored before printing
  * Return: Count
  */
-int _print_rot13(char *str, char *buffer)
+int _print_rot13(int *p, char *str, char *buffer, int count)
 {
-	int i, a, count = 0;
+	int i, a;
 	char *prot, *b = "(null)";
 	char abcd[52] = {"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"};
 	char rot13[52] = {"NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm"};
 
 	if (!str)
-		count = _string_to_buff(b, buffer);
+		count = _string_to_buff(p, b, buffer, count);
 	else
 	{
 		if (str[0] == '\0')
-			return (0);
+			return (count);
 
 		for (i = 0; str[i] != 0; i++)
 			;
@@ -40,8 +42,8 @@ int _print_rot13(char *str, char *buffer)
 					prot[i] = str[i];
 			}
 		}
-		count = _string_to_buff(prot, buffer);
+		count = _string_to_buff(p, prot, buffer, count);
+		free(prot);
 	}
-	free(prot);
 	return (count);
 }

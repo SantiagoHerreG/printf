@@ -3,23 +3,23 @@
 /**
  * _print_rev - prints a string in reverse order
  * @str: pointer to a string to be printed in reverse
+ * @p: pointer to how many times buffer was printed
+ * @count: actual position in buffer
  * @buffer: where chars are kept before printing
  * Return: void
  */
 
-int _print_rev(char *str, char *buffer)
+int _print_rev(int *p, char *str, char *buffer, int count)
 {
 	int n, k = 0;
 	char *prev, *b = "(null)";
 
-	int count = 0;
-
 	if (!str)
-		count = _string_to_buff(b, buffer);
+		count = _string_to_buff(p, b, buffer, count);
 	else
 	{
 		if (str[0] == '\0')
-			return (0);
+			return (count);
 		for (n = 0; str[n] != '\0'; n++)
 			;
 
@@ -32,9 +32,8 @@ int _print_rev(char *str, char *buffer)
 			n--;
 			k++;
 		}
-		count = _string_to_buff(prev, buffer);
-	}
-
+		count = _string_to_buff(p, prev, buffer, count);
 	free(prev);
+	}
 	return (count);
 }

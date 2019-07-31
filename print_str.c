@@ -3,36 +3,38 @@
 /**
  * _print_percentage - Print percentage if format specifier is %
  * @str: String
+ * @p: pointer to how many times buffer is full and printed
+ * @count: actual position in buffer
  * @buffer: string allocated in the heap where chars are kept until printing
  * Return: 1 (Count) or error -1
  */
 
-int _print_percentage(char *str, char *buffer)
+int _print_percentage(int *p, char *str, char *buffer, int count)
 {
 	int k = 1;
 
 	if (str[k] == '%')
-		_write_char('%', buffer);
-	return (1);
+		count = _write_char(p, '%', buffer, count);
+	return (count);
 }
 
 /**
  * _print_str - Print string with format specifier is s
  * @str: String
+ * @p: pointer to how many times buffer is full and printed
+ * @count: actual position in buffer
  * @buffer: string allocated in the heap where chars are kept until printing
  * Return: Count
  */
 
-int _print_str(char *str, char *buffer)
+int _print_str(int *p, char *str, char *buffer, int count)
 {
-	int count = 0;
-
 	char *b = "(null)";
 
 	if (!str)
-		count = _string_to_buff(b, buffer);
+		count = _string_to_buff(p, b, buffer, count);
 	else
-		count = _string_to_buff(str, buffer);
+		count = _string_to_buff(p, str, buffer, count);
 
 	return (count);
 }
@@ -40,17 +42,19 @@ int _print_str(char *str, char *buffer)
 /**
  * _string_to_buff - copies a string content into buffer in the heap
  * @str: string to be printed
+ * @p: pointer to how many times buffer is full and printed
+ * @count: actual position in buffer
  * @buffer: string allocated in the heap where chars are kept until printing
  * Return: count of chars to be printed
  */
-int _string_to_buff(char *str, char *buffer)
+int _string_to_buff(int *p, char *str, char *buffer, int count)
 {
-	int count = 0;
+	int i = 0;
 
-	while (str[count])
+	while (str[i])
 	{
-		buffer[count] = str[count];
-		count++;
+		count = _write_char(p, str[i], buffer, count);
+		i++;
 	}
 	return (count);
 }

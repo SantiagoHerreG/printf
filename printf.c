@@ -6,13 +6,26 @@
 /**
  * _write_char - function that prints a char
  * @c: character to be printed
+ * @p: pointer to how many times buffer is filled
+ * @count: actual position in buffer
  * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: write function
  */
-int _write_char(char c, char *buffer)
+int _write_char(int *p, char c, char *buffer, int count)
 {
-	buffer[0] = c;
-	return (1);
+
+	if (count == 1024)
+	{
+	_print_string(buffer, 1024);
+	count = 0;
+	buffer[count] = c;
+	*p += 1;
+	count++;
+	return (count);
+	}
+	buffer[count] = c;
+	count++;
+	return (count);
 }
 /**
  * _print_string - function that prints a string using callback
@@ -26,38 +39,40 @@ void _print_string(char *buffer, int count)
 }
 /**
  * _special_chars - checks and prints special and naturals characters
+ * @p: pointer to how many times buffer is filled
+ * @count: actual position in buffer
  * @str: pointer to the string in the next char to be printed
  * @buffer: string allocated in the heap, where chars are kept until printing
  * Return: 1 (char printed
  */
-int _special_chars(char *str, char *buffer)
+int _special_chars(int *p, char *str, char *buffer, int count)
 {
-	int k = 1, i = 0;
+	int k = 1;
 
 	if (str[k] == 'n')
-		buffer[i] = '\n';
+		count = _write_char(p, '\n', buffer, count);
 	else if (str[k] == '"')
-		buffer[i] = '"';
+		count = _write_char(p, '"', buffer, count);
 	else if (str[k] == '\'')
-		buffer[i] = '\'';
+		count = _write_char(p, '\'', buffer, count);
 	else if (str[k] == '%')
-		buffer[i] = '%';
+		count = _write_char(p, '%', buffer, count);
 	else if (str[k] == 'a')
-		buffer[i] = '\a';
+		count = _write_char(p, 'a', buffer, count);
 	else if (str[k] == 'b')
-		buffer[i] = '\b';
+		count = _write_char(p, '\b', buffer, count);
 	else if (str[k] == 'f')
-		buffer[i] = '\f';
+		count = _write_char(p, '\f', buffer, count);
 	else if (str[k] == 'r')
-		buffer[i] = '\r';
+		count = _write_char(p, '\r', buffer, count);
 	else if (str[k] == 't')
-		buffer[i] = '\t';
+		count = _write_char(p, '\t', buffer, count);
 	else if (str[k] == 'v')
-		buffer[i] = '\v';
+		count = _write_char(p, '\v', buffer, count);
 	else if (str[k] == '\\')
-		buffer[i] = '\\';
+		count = _write_char(p, '\\', buffer, count);
 
-	return (1);
+	return (count);
 }
 /**
  * _print_selector - function that selects format
@@ -68,45 +83,43 @@ int _special_chars(char *str, char *buffer)
  */
 int _print_selector(char *str, va_list list, char *buffer)
 {
-	int count = 0, k = 0;
+	int count = 0, k = 0, a = 0, *p = &a;
 
 	for (; str[k] != 0; k++)
 	{
 		if (str[k] == '\\')
-			count += _special_chars(str + k, buffer + count);
+			count = _special_chars(p, str + k, buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 's')
-			count += _print_str(va_arg(list, char *), buffer + count);
+			count = _print_str(p, va_arg(list, char *), buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 'c')
-			count += _write_char(va_arg(list, int), buffer + count);
+			count = _write_char(p, va_arg(list, int), buffer, count);
 		else if (str[k] == '%' && (str[k + 1] == 'd' || str[k + 1] == 'i'))
-			count += _print_number(va_arg(list, int), 0, buffer + count);
+			count = _print_number(p, va_arg(list, int), count, buffer);
 		else if (str[k] == '%' && str[k + 1] == 'b')
-			count += _print_binary(va_arg(list, unsigned int), 0, buffer + count);
+			count = _print_binary(p, va_arg(list, unsigned int), count, buffer);
 		else if (str[k] == '%' && str[k + 1] == '%')
-			count += _print_percentage(str + k, buffer + count);
+			count = _print_percentage(p, str + k, buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 'o')
-			count += _print_octal(va_arg(list, unsigned int), 0, buffer + count);
+			count = _print_octal(p, va_arg(list, unsigned int), count, buffer);
 		else if (str[k] == '%' && (str[k + 1] == 'x' || str[k + 1] == 'X'))
-			count += _print_hex(str[k + 1], va_arg(list, unsigned int), buffer + count);
+			count = _print_h(p, str[k + 1], va_arg(list, unsigned int), buffer, count);
 		else if (str[k] == '%' && str[k + 1] == '\0')
 			break;
 		else if (str[k] == '%' && str[k + 1] == 'u')
-			count += _print_unsigned_int(va_arg(list, unsigned int), count, buffer);
+			count = _print_unsigned_int(p, va_arg(list, unsigned int), count, buffer);
 		else if (str[k] == '%' && str[k + 1] == 'r')
-			count += _print_rev(va_arg(list, char *), buffer + count);
+			count = _print_rev(p, va_arg(list, char *), buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 'R')
-			count += _print_rot13(va_arg(list, char *), buffer + count);
+			count = _print_rot13(p, va_arg(list, char *), buffer, count);
 		else
 		{
-			count += _write_char(str[k], buffer + count);
+			count = _write_char(p, str[k], buffer, count);
 			k--;
 		}
 		k++;
 	}
 	_print_string(buffer, count);
-	if (str[k] == '%')
-		return (-1);
-	return (count);
+	return (str[k] == '%' ? -1 : 1024 * (*p) + count);
 }
 /**
  * _printf - main function that replicates the original printf
