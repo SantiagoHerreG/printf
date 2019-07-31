@@ -100,7 +100,7 @@ _printf("%s", "Holberton School rocks!");
 .fi
 .in
 .PP
-To print the 
+To print the
 .I hexadecimal
 number of an integer:
 .in +4n
