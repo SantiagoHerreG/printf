@@ -22,7 +22,7 @@ int _write_char(char c, char *buffer)
  */
 void _print_string(char *buffer, int count)
 {
-		write(1, buffer, count);
+	write(1, buffer, count);
 }
 /**
  * _special_chars - checks and prints special and naturals characters
@@ -68,9 +68,9 @@ int _special_chars(char *str, char *buffer)
  */
 int _print_selector(char *str, va_list list, char *buffer)
 {
-	int count = 0, k = 0, a = 0;
+	int count = 0, k = 0;
 
-	for ( ; str[k] != 0; k++)
+	for (; str[k] != 0; k++)
 	{
 		if (str[k] == '\\')
 			count += _special_chars(str + k, buffer + count);
@@ -89,14 +89,13 @@ int _print_selector(char *str, va_list list, char *buffer)
 		else if (str[k] == '%' && (str[k + 1] == 'x' || str[k + 1] == 'X'))
 			count += _print_hex(str[k + 1], va_arg(list, unsigned int), buffer + count);
 		else if (str[k] == '%' && str[k + 1] == '\0')
-		{
-			a = -1;
 			break;
-		}
 		else if (str[k] == '%' && str[k + 1] == 'u')
 			count += _print_unsigned_int(va_arg(list, unsigned int), count, buffer);
 		else if (str[k] == '%' && str[k + 1] == 'r')
 			count += _print_rev(va_arg(list, char *), buffer + count);
+		else if (str[k] == '%' && str[k + 1] == 'R')
+			count += _print_rot13(va_arg(list, char *), buffer + count);
 		else
 		{
 			count += _write_char(str[k], buffer + count);
@@ -105,8 +104,8 @@ int _print_selector(char *str, va_list list, char *buffer)
 		k++;
 	}
 	_print_string(buffer, count);
-	if (a == -1)
-		return (a);
+	if (str[k] == '%')
+		return (-1);
 	return (count);
 }
 /**
