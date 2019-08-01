@@ -18,5 +18,7 @@ int _print_h(int *p, char option, unsigned int n, char *buffer, int count);
 int _print_unsigned_int(int *p, unsigned int n, int count, char *buffer);
 int _print_rev(int *p, char *str, char *buffer, int count);
 int _print_rot13(int *p, char *str, char *buffer, int count);
+int _print_ptr(int *p, unsigned long n, char *buffer, int count);
+
 
 #endif /* HOLBERTON H */

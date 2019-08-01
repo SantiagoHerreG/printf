@@ -111,6 +111,8 @@ int _print_selector(char *str, va_list list, char *buffer)
 			count = _print_rev(p, va_arg(list, char *), buffer, count);
 		else if (str[k] == '%' && str[k + 1] == 'R')
 			count = _print_rot13(p, va_arg(list, char *), buffer, count);
+		else if (str[k] == '%' && str[k + 1] == 'p')
+			count = _print_ptr(p, va_arg(list, unsigned long), buffer, count);
 		else
 		{
 			count = _write_char(p, str[k], buffer, count);
