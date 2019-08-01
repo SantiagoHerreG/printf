@@ -83,7 +83,7 @@ int _special_chars(int *p, char *str, char *buffer, int count)
  */
 int _print_selector(char *str, va_list list, char *buffer)
 {
-	int count = 0, k = 0, a = 0, *p = &a;
+	int count = 0, k = 0, a = 0, *p = &a, *ptrk = &k;
 
 	for (; str[k] != 0; k++)
 	{
@@ -114,10 +114,7 @@ int _print_selector(char *str, va_list list, char *buffer)
 		else if (str[k] == '%' && str[k + 1] == 'p')
 			count = _print_ptr(p, va_arg(list, unsigned long), buffer, count);
 		else
-		{
-			count = _write_char(p, str[k], buffer, count);
-			k--;
-		}
+			count = _flag_sel(p, str, list, buffer, count, ptrk);
 		k++;
 	}
 	_print_string(buffer, count);

@@ -19,6 +19,8 @@ int _print_unsigned_int(int *p, unsigned int n, int count, char *buffer);
 int _print_rev(int *p, char *str, char *buffer, int count);
 int _print_rot13(int *p, char *str, char *buffer, int count);
 int _print_ptr(int *p, unsigned long n, char *buffer, int count);
+int _flag_sel(int *, char *, va_list, char *, int, int *);
+int _flag_numeral(int *, char *, va_list, char *, int, int *);
 
 
 #endif /* HOLBERTON H */
